@@ -1,35 +1,29 @@
-name: Github Actions Build and image-hot-spot
+name: Build and Deploy
 
 on:
   push:
     branches:
-      - master
+      - master # 在main分支上提交代码时触发
+  workflow_dispatch: # 手动触发工作流程
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v1
-        with:
-          node-version: '16.x'
+      - name: Install Dependencies
+        run: npm ci
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build website
+      - name: Build
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          branch: gh-pages
-          folder: dist
+          branch: gh-pages # 部署到gh-pages分支
+          folder: dist # 构建后的文件夹
           clean: true
-          temp-deployment-folder: deployment
-        env:
-          ACCESS_TOKEN: ${{ secrets.MOCHEN_TOKEN }}
+          token: ${{ secrets.MOCHEN_TOKEN }} # GitHub Token，用于推送到gh-pages分支
