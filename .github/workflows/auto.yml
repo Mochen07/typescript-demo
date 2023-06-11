@@ -30,5 +30,6 @@ jobs:
           branch: gh-pages
           folder: dist
           clean: true
+          temp-deployment-folder: deployment
         env:
           ACCESS_TOKEN: ${{ secrets.MOCHEN_TOKEN }}
